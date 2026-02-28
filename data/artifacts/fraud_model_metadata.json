@@ -1,0 +1,25 @@
+{
+  "train_date_utc": "2026-02-28T00:47:20.378635+00:00",
+  "champion_model": "XGBoost",
+  "optimal_threshold": 0.06444444444444444,
+  "n_features": 460,
+  "cost_fn": 500.0,
+  "cost_fp": 10.0,
+  "validation_metrics": {
+    "pr_auc": 0.5700811139287787,
+    "roc_auc": 0.9117690994451558,
+    "brier": 0.019322002086077462
+  },
+  "test_metrics": {
+    "pr_auc": 0.5165721834219392,
+    "roc_auc": 0.8844027210204239,
+    "brier": 0.025233266196425092,
+    "precision": 0.26160714285714287,
+    "recall": 0.6619972887483054,
+    "expected_loss": 415350.0,
+    "tp": 1465,
+    "fp": 4135,
+    "fn": 748,
+    "tn": 52706
+  }
+}
