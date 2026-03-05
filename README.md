@@ -88,6 +88,16 @@ data/
    # Linux/Mac: ~/.kaggle/kaggle.json
    ```
 
+4. **Set up pre-commit hooks** (optional, recommended for development)
+   
+   Install pre-commit to automatically strip notebook outputs before committing:
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   ```
+   
+   This prevents large notebook outputs from bloating the repository. Configuration is in `.pre-commit-config.yaml`.
+
 ### Usage
 
 1. **Run the main pipeline notebook**

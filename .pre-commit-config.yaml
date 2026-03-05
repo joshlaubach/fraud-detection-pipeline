@@ -1,0 +1,11 @@
+repos:
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.6.1
+    hooks:
+      - id: nbstripout
+        name: Strip Jupyter Notebook Outputs
+        description: Strip outputs and metadata from notebooks before commit
+        entry: nbstripout
+        language: python
+        files: \.ipynb$
+        stages: [commit]
