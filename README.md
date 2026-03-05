@@ -2,7 +2,7 @@
 
 A production-grade fraud detection system that minimizes expected financial loss through cost-sensitive machine learning, featuring temporal validation, calibrated probability scoring, and distribution shift monitoring.
 
-## 🎯 Project Overview
+## Project Overview
 
 This project implements a real-world fraud detection pipeline that:
 
@@ -19,7 +19,7 @@ This project implements a real-world fraud detection pipeline that:
 - **Optimal Threshold**: ~0.02 (far below 0.5 default due to 50:1 cost ratio)
 - **Expected Loss Reduction**: Significant improvement over accuracy-based approaches
 
-## 📊 Problem Statement
+## Problem Statement
 
 Credit card fraud detection is an **economic optimization problem**, not a classification accuracy problem. Key insights:
 
@@ -37,29 +37,29 @@ Credit card fraud detection is an **economic optimization problem**, not a class
 
 The optimal decision threshold is: τ* = C_fp / (C_fn + C_fp) ≈ **0.0196** (not 0.5!)
 
-## 🏗️ Project Architecture
+## ️ Project Architecture
 
 ```
-fraud_pipeline.ipynb          # Main analysis notebook (11 sections)
-├── 1. Problem Definition     # Business objective, cost model
-├── 2. Cost Model            # Research-grounded cost constants
-├── 3. Exploratory Analysis  # Fraud patterns, temporal analysis
-├── 4. Data Splitting        # Chronological train/val/test
-├── 5. Feature Engineering   # Domain-driven features
-├── 6. Baseline Models       # Initial implementations
-├── 7. Model Selection       # Compare LogReg vs XGBoost
-├── 8. Threshold Tuning      # Cost-optimal threshold
-├── 9. Calibration           # Probability reliability
-├── 10. Final Evaluation     # Test set performance
-└── 11. Deployment           # Artifact serialization
+fraud_pipeline.ipynb # Main analysis notebook (11 sections)
+├── 1. Problem Definition # Business objective, cost model
+├── 2. Cost Model # Research-grounded cost constants
+├── 3. Exploratory Analysis # Fraud patterns, temporal analysis
+├── 4. Data Splitting # Chronological train/val/test
+├── 5. Feature Engineering # Domain-driven features
+├── 6. Baseline Models # Initial implementations
+├── 7. Model Selection # Compare LogReg vs XGBoost
+├── 8. Threshold Tuning # Cost-optimal threshold
+├── 9. Calibration # Probability reliability
+├── 10. Final Evaluation # Test set performance
+└── 11. Deployment # Artifact serialization
 
 data/
-├── raw/                     # IEEE-CIS Fraud Detection dataset (Kaggle)
-├── processed/               # Feature-engineered data splits
-└── artifacts/               # Model + metadata for deployment
+├── raw/ # IEEE-CIS Fraud Detection dataset (Kaggle)
+├── processed/ # Feature-engineered data splits
+└── artifacts/ # Model + metadata for deployment
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -69,55 +69,55 @@ data/
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd "Credit Card Fraud"
-   ```
+ ```bash
+ git clone <repository-url>
+ cd "Credit Card Fraud"
+ ```
 
 2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+ ```bash
+ pip install -r requirements.txt
+ ```
 
 3. **Set up Kaggle API** (for dataset download)
-   
-   Follow [Kaggle API documentation](https://github.com/Kaggle/kaggle-api) to configure your credentials:
-   ```bash
-   # Place kaggle.json in:
-   # Windows: C:\Users\<username>\.kaggle\kaggle.json
-   # Linux/Mac: ~/.kaggle/kaggle.json
-   ```
+ 
+ Follow [Kaggle API documentation](https://github.com/Kaggle/kaggle-api) to configure your credentials:
+ ```bash
+ # Place kaggle.json in:
+ # Windows: C:\Users\<username>\.kaggle\kaggle.json
+ # Linux/Mac: ~/.kaggle/kaggle.json
+ ```
 
 4. **Set up pre-commit hooks** (optional, recommended for development)
-   
-   Install pre-commit to automatically strip notebook outputs before committing:
-   ```bash
-   pip install pre-commit
-   pre-commit install
-   ```
-   
-   This prevents large notebook outputs from bloating the repository. Configuration is in `.pre-commit-config.yaml`.
+ 
+ Install pre-commit to automatically strip notebook outputs before committing:
+ ```bash
+ pip install pre-commit
+ pre-commit install
+ ```
+ 
+ This prevents large notebook outputs from bloating the repository. Configuration is in `.pre-commit-config.yaml`.
 
 ### Usage
 
 1. **Run the main pipeline notebook**
-   
-   Open `fraud_pipeline.ipynb` in Jupyter Lab or VS Code and run all cells:
-   ```bash
-   jupyter lab fraud_pipeline.ipynb
-   ```
+ 
+ Open `fraud_pipeline.ipynb` in Jupyter Lab or VS Code and run all cells:
+ ```bash
+ jupyter lab fraud_pipeline.ipynb
+ ```
 
 2. **Dataset download**
-   
-   The notebook automatically downloads the [IEEE-CIS Fraud Detection dataset](https://www.kaggle.com/datasets/lnasiri007/ieeecis-fraud-detection) from Kaggle on first run. Files are cached locally for subsequent runs.
+ 
+ The notebook automatically downloads the [IEEE-CIS Fraud Detection dataset](https://www.kaggle.com/datasets/lnasiri007/ieeecis-fraud-detection) from Kaggle on first run. Files are cached locally for subsequent runs.
 
 3. **Output artifacts**
-   
-   After execution, find trained models and metadata in:
-   - `data/artifacts/fraud_model.joblib` — Serialized model + preprocessing pipeline
-   - `data/artifacts/fraud_model_metadata.json` — Training metrics, config, timestamps
+ 
+ After execution, find trained models and metadata in:
+ - `data/artifacts/fraud_model.joblib` — Serialized model + preprocessing pipeline
+ - `data/artifacts/fraud_model_metadata.json` — Training metrics, config, timestamps
 
-## 📈 Methodology Highlights
+## Methodology Highlights
 
 ### 1. Cost-Sensitive Learning
 
@@ -156,12 +156,12 @@ Systematic evaluation of LogisticRegression vs XGBoost:
 
 | Model | PR-AUC | ROC-AUC | Interpretability | Speed |
 |-------|--------|---------|------------------|-------|
-| LogisticRegression | 0.721 | 0.979 | ✅ High | ✅ Fast |
-| XGBoost | 0.728 | 0.981 | ⚠️ Medium | ⚠️ Slower |
+| LogisticRegression | 0.721 | 0.979 | High | Fast |
+| XGBoost | 0.728 | 0.981 | ️ Medium | ️ Slower |
 
 Champion model selected based on PR-AUC (most relevant for imbalanced problems).
 
-## 📚 Dataset
+## Dataset
 
 **Source**: [IEEE-CIS Fraud Detection (Kaggle)](https://www.kaggle.com/datasets/lnasiri007/ieeecis-fraud-detection)
 
@@ -172,7 +172,7 @@ Champion model selected based on PR-AUC (most relevant for imbalanced problems).
 
 **Note**: Raw data files (~3.7GB) are excluded from this repository. Download via Kaggle API (automated in notebook).
 
-## 🔬 Key Technical Decisions
+## Key Technical Decisions
 
 ### Why These Costs?
 
@@ -196,7 +196,7 @@ Surprisingly competitive with XGBoost:
 - More stable calibration
 - Sufficient for well-engineered features
 
-## 🛠️ Dependencies
+## ️ Dependencies
 
 Core libraries:
 - **pandas**: Data manipulation
@@ -208,7 +208,7 @@ Core libraries:
 
 See `requirements.txt` for complete list with versions.
 
-## 📊 Results Summary
+## Results Summary
 
 ### Validation Performance
 
@@ -228,7 +228,7 @@ See `requirements.txt` for complete list with versions.
 - Maintains strong performance across distribution shift
 - See Section 10 of notebook for full breakdown
 
-## 🚧 Future Enhancements
+## Future Enhancements
 
 **Model Improvements**:
 - Ensemble methods (stacking, blending)
@@ -246,17 +246,17 @@ See `requirements.txt` for complete list with versions.
 - Graph neural networks for transaction networks
 - Causal inference for feature selection
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **Dataset**: IEEE Computational Intelligence Society + Vesta Corporation
 - **Platform**: Kaggle for hosting and API access
 - **Research**: Cost estimates grounded in industry reports (Mastercard, LexisNexis, Javelin)
 
-## 📧 Contact
+## Contact
 
 For questions or collaboration opportunities, please open an issue or reach out via [your contact method].
 

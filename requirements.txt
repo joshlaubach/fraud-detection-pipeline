@@ -19,4 +19,4 @@ jupyter>=1.0.0
 jupyterlab>=4.0.0
 
 # Additional sklearn utilities (implicit but explicit for clarity)
-scipy>=1.11.0  # Required by scikit-learn
+scipy>=1.11.0 # Required by scikit-learn
