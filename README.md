@@ -14,9 +14,9 @@ This project implements a real-world fraud detection pipeline that:
 
 ### Key Results
 
-- **ROC-AUC**: 0.979 on temporal test set
-- **PR-AUC**: 0.721 (under 3.5% class imbalance)
-- **Optimal Threshold**: ~0.02 (far below 0.5 default due to 50:1 cost ratio)
+- **ROC-AUC**: 0.8844 on temporal test set
+- **PR-AUC**: 0.5166 (under 3.5% class imbalance)
+- **Optimal Threshold**: ~0.0644 (far below 0.5 default due to 50:1 cost ratio)
 - **Expected Loss Reduction**: Significant improvement over accuracy-based approaches
 
 ## Problem Statement
@@ -156,8 +156,7 @@ Systematic evaluation of LogisticRegression vs XGBoost:
 
 | Model | PR-AUC | ROC-AUC | Interpretability | Speed |
 |-------|--------|---------|------------------|-------|
-| LogisticRegression | 0.721 | 0.979 | High | Fast |
-| XGBoost | 0.728 | 0.981 | ️ Medium | ️ Slower |
+| XGBoost | 0.5166 | 0.8844 | Medium | Fast |
 
 Champion model selected based on PR-AUC (most relevant for imbalanced problems).
 
@@ -212,12 +211,13 @@ See `requirements.txt` for complete list with versions.
 
 ### Validation Performance
 
-- **PR-AUC**: 0.721 (key metric for imbalanced problems)
-- **ROC-AUC**: 0.979
+- **PR-AUC**: 0.5166 (key metric for imbalanced problems)
+- **ROC-AUC**: 0.8844
 - **Brier Score**: 0.023 (well-calibrated probabilities)
 
 ### Optimal Threshold Analysis
 
+- **Data-optimal threshold**: 0.0644 (from grid search on validation set)
 - **Theory-based threshold**: 0.0196 (from cost ratio)
 - **Empirical optimal**: ~0.019 (validated on data)
 - **Recall at 1% FPR**: 0.808 (catch 80% of fraud at acceptable false decline rate)
