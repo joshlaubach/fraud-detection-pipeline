@@ -1,0 +1,103 @@
+# ============================================================================
+# Fraud Detection Pipeline Configuration
+# ============================================================================
+# All hyperparameters, cost structure, and operational settings in one place.
+# Override for experiments by copying to configs/local.yaml.
+
+random_seed: 42
+
+# --- Business Cost Structure ---
+# C_fn = $337: missed fraud (chargeback + bank fees + investigation + churn + reputation)
+# C_fp = $20:  false decline (interchange + support + churn amortized + abandonment)
+# Both derived bottom-up from published research -- see Section 2 of the notebook.
+# Cost ratio: rho = 337/20 = 16.9x
+# Optimal threshold: tau* = C_fp / (C_fn + C_fp) = 20/357 ~ 0.056 (5.6%)
+costs:
+  false_negative: 337.0
+  false_positive: 20.0
+
+# --- Data Paths ---
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  artifacts_dir: "data/artifacts"
+  target_col: "isFraud"
+  id_col: "TransactionID"
+  time_col: "TransactionDT"
+  amount_col: "TransactionAmt"
+
+# --- Temporal Validation Splits ---
+# 30-day gap enforces label delay (fraud confirmation lag)
+splits:
+  train_quantile: 0.75
+  valid_quantile: 0.90
+  gap_days: 30
+
+# --- Feature Engineering ---
+features:
+  amount_bins: [-0.01, 1, 5, 25, 100, 500, .inf]
+  entity_cols: ["card1", "card2", "P_emaildomain"]
+  missingness_threshold: 0.10
+
+# --- Supervised Models ---
+supervised:
+  xgboost:
+    n_estimators: 600
+    learning_rate: 0.05
+    max_depth: 6
+    min_child_weight: 5
+    subsample: 0.8
+    colsample_bytree: 0.8
+    early_stopping_rounds: 50
+    scale_pos_weight: 1.0
+  logreg:
+    solver: "lbfgs"
+    max_iter: 300
+    class_weight: "balanced"
+
+# --- Unsupervised Anomaly Detection ---
+unsupervised:
+  # k-NN anomaly: fit on normal transactions, score by distance to normal neighbors
+  knn:
+    n_neighbors: 5
+    algorithm: "ball_tree"
+    metric: "euclidean"
+    leaf_size: 40
+  # DBSCAN: validation/sanity check only, NOT used in production ensemble
+  dbscan_validation:
+    eps_range: [0.3, 0.5, 0.7, 1.0, 1.5]
+    min_samples_range: [5, 10, 20]
+  # Curated domain features for anomaly detection (~8 interpretable features)
+  # Full 460-feature space makes distances meaningless (curse of dimensionality)
+  feature_subset:
+    - "log_TransactionAmt"
+    - "hour_of_day_proxy"
+    - "day_of_week_proxy"
+    - "C1"
+    - "C13"
+    - "C14"
+    - "D1"
+    - "D15"
+
+# --- Cost-Sensitive Threshold Optimization ---
+threshold:
+  grid_start: 0.01
+  grid_end: 0.99
+  grid_steps: 199
+
+# --- Ensemble ---
+# Weighted blend: score = w_s * P(fraud|XGBoost) + w_a * knn_anomaly_score
+# Blend is smoother than OR-rules and produces a single calibrated score
+# for cost-sensitive threshold optimization.
+ensemble:
+  supervised_weight: 0.7
+  anomaly_weight: 0.3
+
+# --- Drift Monitoring ---
+drift:
+  psi_warning: 0.1
+  psi_critical: 0.2
+
+# --- Memory Profiling ---
+memory_profiling:
+  enabled: true

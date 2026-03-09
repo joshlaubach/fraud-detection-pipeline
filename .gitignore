@@ -86,10 +86,16 @@ Thumbs.db
 *.temp
 *.bak
 
+# Auto-generated run artifacts (delete to avoid stale knn/old-run artifacts)
+data/artifacts/metadata.json
+data/artifacts/config_snapshot.json
+
 # Keep important metadata
 !data/artifacts/fraud_model_metadata.json
 !data/processed/feature_store_manifest.json
-!model_metadata.json
+
+# Local config overrides
+configs/local.yaml
 
 # Claude AI settings (local only)
 .claude/

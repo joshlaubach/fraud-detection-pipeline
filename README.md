@@ -2,6 +2,42 @@
 
 A production-grade fraud detection system that minimizes expected financial loss through cost-sensitive machine learning, featuring temporal validation, calibrated probability scoring, and distribution shift monitoring.
 
+## Plain English Overview
+
+Here is the whole pipeline in plain English, for anyone who wants the overview without reading 60+ cells of code.
+
+**1. Setup and Cost Model (Sections 1-2)**
+We derive that catching missed fraud costs $337 per incident (chargeback + bank fees + investigation + churn), while a false alarm costs $20 (interchange + support + amortized churn). This ~17:1 ratio drives every threshold and model decision we make.
+
+**2. Data Exploration (Section 3)**
+We examine ~590K historical transactions to find which signals actually predict fraud: unusual amounts, time-of-day patterns, and missing data all carry predictive information.
+
+**3. Data Preparation (Section 4)**
+We load, merge, and clean the raw transaction and identity tables into a single consistent base table ready for feature engineering.
+
+**4. Temporal Validation (Section 5)**
+We split data chronologically -- train on old data, test on newer data. Random splits would leak future information into the past and make results look better than they really are.
+
+**5. Feature Engineering (Section 6)**
+We build ~460 features that capture unusual behavior: weird amounts, unusual times, new devices, missing fields.
+
+**6. Model Building (Section 7)**
+We train a supervised model (XGBoost) that learns from labeled fraud examples, and an unsupervised Gaussian Mixture Model that learns what normal transactions look like. We blend them 70/30: XGBoost is precise for known fraud patterns; the GMM catches novel ones the supervised model has not seen.
+
+**7. Threshold Tuning (Section 8)**
+The optimal threshold is $10 / ($500 + $10) = 1.96%. Any transaction with fraud probability above that gets flagged. This low threshold reflects how expensive missed fraud is relative to false alarms.
+
+**8. Drift Monitoring (Section 9)**
+Fraud tactics change over time. We watch for when feature distributions shift significantly. If 3 or more features drift (PSI > 0.2), we trigger a retraining event.
+
+**9. Final Evaluation (Section 10)**
+On held-out test data we report ROC-AUC with 95% confidence intervals and translate model performance into estimated dollar savings.
+
+**10. Production Ready (Sections 11-12)**
+The trained model, thresholds, and preprocessing pipeline are saved as a single versioned file. Per-transaction decisions are explainable via SHAP and memory footprint is profiled for production deployment.
+
+---
+
 ## Project Overview
 
 This project implements a real-world fraud detection pipeline that:
@@ -117,6 +153,24 @@ data/
  - `data/artifacts/fraud_model.joblib` — Serialized model + preprocessing pipeline
  - `data/artifacts/fraud_model_metadata.json` — Training metrics, config, timestamps
 
+4. **Score new transactions via CLI**
+ 
+ Score any transaction CSV using the saved model and learned threshold:
+ ```bash
+ python predict.py data/raw/test_transaction_raw.csv --output data/artifacts/test_transaction_scored.csv
+ ```
+ 
+ Output adds:
+ - `fraud_score` (probability)
+ - `decision` (0/1 at threshold)
+ - `decision_label` (`allow` / `flag_fraud`)
+
+5. **Reusable Python modules**
+ 
+ Core notebook functions are now importable from:
+ - `src/fraud_detection/features.py`
+ - `src/fraud_detection/evaluate.py`
+
 ## Methodology Highlights
 
 ### 1. Cost-Sensitive Learning
@@ -203,6 +257,7 @@ Core libraries:
 - **scikit-learn**: ML algorithms, metrics, preprocessing
 - **xgboost**: Gradient boosting
 - **matplotlib** + **seaborn**: Visualization
+- **shap**: Tree-based explainability (summary + waterfall)
 - **kagglehub**: Dataset download
 
 See `requirements.txt` for complete list with versions.
